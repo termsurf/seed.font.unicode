@@ -9,7 +9,7 @@ globSync(`${cwd}/font/**/*.{TTF,OTF}`).forEach(path => {
   const newPathDotArray = path.split('.')
   const ext = newPathDotArray.pop()?.toLowerCase()
   const newPath = `${cwd}/font/` + pathResolver.relative(`${cwd}/font`, `${newPathDotArray.join('.').trim()}`.replace(/）/g, ')').replace(/（/g, '(')).split('/')
-    .map(part => pascalCase(part).replace(/V(\d+)/, (_, $1) => `v${$1}`))
+    .map(part => pascalCase(part))
     .join('/') + `.${ext}`
   const dir = pathResolver.dirname(newPath)
   fs.mkdirSync(dir, { recursive: true })
