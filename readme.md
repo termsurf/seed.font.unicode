@@ -7,6 +7,8 @@ This repo contains _generic_ unicode fonts which stretch across multiple scripts
 - [Tibetan unicode fonts](https://github.com/nerdbond/seed.font.tibetan)
 - [Arabic unicode fonts](https://github.com/nerdbond/seed.font.arabic)
 - [Devanagari unicode fonts](https://github.com/nerdbond/seed.font.devanagari)
+- [Cuneiform unicode fonts](https://github.com/nerdbond/seed.font.cuneiform)
+- [Bengali unicode fonts](https://github.com/nerdbond/seed.font.bengali)
 
 ## Contribute
 
