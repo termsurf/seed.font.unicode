@@ -22,6 +22,7 @@ const BLOCKS_MISSING_MAP: Record<string, Array<Block>> = {
 }
 const blocks = BLOCKS_MAP[script] ?? []
 const blocksMissing = BLOCKS_MISSING_MAP[script] ?? []
+const list: Array<any> = []
 
 globSync(`${cwd}/font/**/*.{ttf,otf}`).forEach(path => {
   const pathDotArray = path.split('.')
@@ -58,11 +59,20 @@ globSync(`${cwd}/font/**/*.{ttf,otf}`).forEach(path => {
 
   if (!glyph.length) {
     delete index[name]
+  } else {
+    list.push(index[name])
   }
 })
 
-// console.log(`${cwd}/index.json`)
-fs.writeFileSync(`${cwd}/index.json`, JSON.stringify(index, null, 2))
+const finalIndex: Record<string, any> = {}
+
+list.sort((a, b) => b.glyph.length - a.glyph.length)
+
+list.forEach(item => {
+  finalIndex[item.name] = item
+})
+
+fs.writeFileSync(`${cwd}/index.json`, JSON.stringify(finalIndex, null, 2))
 
 function loadIndex() {
   try {
