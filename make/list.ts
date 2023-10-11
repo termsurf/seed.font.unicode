@@ -17,7 +17,11 @@ const TYPE: Record<string, string> = {
 const BLOCKS_MAP: Record<string, Array<Block>> = {
   tibetan: detector.TIBETAN_UNICODE_BLOCKS
 }
+const BLOCKS_MISSING_MAP: Record<string, Array<Block>> = {
+  tibetan: detector.TIBETAN_UNICODE_BLOCKS_MISSING
+}
 const blocks = BLOCKS_MAP[script] ?? []
+const blocksMissing = BLOCKS_MISSING_MAP[script] ?? []
 
 globSync(`${cwd}/font/**/*.{ttf,otf}`).forEach(path => {
   const pathDotArray = path.split('.')
@@ -26,12 +30,24 @@ globSync(`${cwd}/font/**/*.{ttf,otf}`).forEach(path => {
   const type = TYPE[ext]
   const relativePath = pathResolver.relative(cwd, path)
   const font = fontkit.openSync(path)
-  const glyph: Array<string> = []
+  const glyph: Array<number> = []
+  const missing: Array<number> = []
   blocks.forEach(([start, end]) => {
     let i = start
     while (i <= end) {
       if (font.hasGlyphForCodePoint(i)) {
-        glyph.push(i.toString(16).padStart(4, '0'))
+        glyph.push(i)
+      } else {
+        missing.push(i)
+      }
+      i++
+    }
+  })
+  blocksMissing.forEach(([start, end]) => {
+    let i = start
+    while (i <= end) {
+      if (missing.includes(i)) {
+        missing.splice(missing.indexOf(i), 1)
       }
       i++
     }
@@ -43,7 +59,8 @@ globSync(`${cwd}/font/**/*.{ttf,otf}`).forEach(path => {
   index[name].path = relativePath
   index[name].glyph = {
     length: glyph.length,
-    list: glyph.join(':')
+    has: glyph.map(x => x.toString(16).padStart(4, '0')).join(':'),
+    missing: missing.length ? missing.map(x => x.toString(16).padStart(4, '0')).join(':') : undefined,
   }
 
   if (!glyph.length) {
