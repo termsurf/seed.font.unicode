@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": ["es2020", "dom", "dom.iterable"],
+    "outDir": "host",
+    "rootDir": ".",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "strictNullChecks": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "noUncheckedIndexedAccess": false,
+    "baseUrl": ".",
+    "noErrorTruncation": true,
+    "types": ["node"],
+    "typeRoots": ["node_modules/@types"],
+    "noImplicitAny": false,
+    "declaration": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "~/*": ["./*"]
+    }
+  },
+  "ts-node": {
+    "files": true
+  },
+  "include": ["*.ts", "**/*.ts", "*.d.ts"],
+  "exclude": ["node_modules", "host", "tmp"]
+}
