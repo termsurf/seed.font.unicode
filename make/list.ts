@@ -35,19 +35,12 @@ globSync(`${cwd}/font/**/*.{ttf,otf}`).forEach(path => {
   blocks.forEach(([start, end]) => {
     let i = start
     while (i <= end) {
-      if (font.hasGlyphForCodePoint(i)) {
-        glyph.push(i)
-      } else {
-        missing.push(i)
-      }
-      i++
-    }
-  })
-  blocksMissing.forEach(([start, end]) => {
-    let i = start
-    while (i <= end) {
-      if (missing.includes(i)) {
-        missing.splice(missing.indexOf(i), 1)
+      if (!isMissing(i)) {
+        if (font.hasGlyphForCodePoint(i)) {
+          glyph.push(i)
+        } else {
+          missing.push(i)
+        }
       }
       i++
     }
@@ -77,4 +70,22 @@ function loadIndex() {
   } catch (e) {
     return {}
   }
+}
+
+function isMissing(point: number) {
+  if (!blocksMissing) {
+    return false
+  }
+
+  for (const [start, end] of blocksMissing) {
+    let i = start
+    while (i <= end) {
+      if (i === point) {
+        return true
+      }
+      i++
+    }
+  }
+
+  return false
 }
