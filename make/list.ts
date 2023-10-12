@@ -19,10 +19,10 @@ const TYPE: Record<string, string> = {
   otf: 'opentype',
 }
 const BLOCKS_MAP: Record<string, Array<Block>> = {
-  tibetan: detector.TIBETAN_UNICODE_BLOCKS
+  tibetan: detector.TIBETAN_UNICODE_BLOCKS,
 }
 const BLOCKS_MISSING_MAP: Record<string, Array<Block>> = {
-  tibetan: detector.TIBETAN_UNICODE_BLOCKS_MISSING
+  tibetan: detector.TIBETAN_UNICODE_BLOCKS_MISSING,
 }
 const blocks = BLOCKS_MAP[script] ?? []
 const blocksMissing = BLOCKS_MISSING_MAP[script] ?? []
@@ -60,7 +60,9 @@ globSync(`${cwd}/font/**/*.{ttf,otf}`).forEach(path => {
   index[name].glyph = {
     length: glyph.length,
     has: glyph.map(x => x.toString(16).padStart(4, '0')).join(':'),
-    missing: missing.length ? missing.map(x => x.toString(16).padStart(4, '0')).join(':') : undefined,
+    missing: missing.length
+      ? missing.map(x => x.toString(16).padStart(4, '0')).join(':')
+      : undefined,
   }
 
   if (!glyph.length) {
@@ -75,10 +77,15 @@ const finalIndex: Record<string, any> = {}
 list.sort((a, b) => b.glyph.length - a.glyph.length)
 
 list.forEach(item => {
-  finalIndex[_.kebabCase(item.name).replace(/-v-(\d+)/, (_, $1) => `-v${$1}`)] = item
+  finalIndex[
+    _.kebabCase(item.name).replace(/-v-(\d+)/, (_, $1) => `-v${$1}`)
+  ] = item
 })
 
-fs.writeFileSync(`${cwd}/index.json`, JSON.stringify(finalIndex, null, 2))
+fs.writeFileSync(
+  `${cwd}/index.json`,
+  JSON.stringify(finalIndex, null, 2),
+)
 
 function loadIndex() {
   try {
@@ -131,7 +138,8 @@ function hasGlyph(name, font: any, point: number) {
 }
 
 function isCanvasBlank(canvas) {
-  return !canvas.getContext('2d')
-    .getImageData(0, 0, canvas.width, canvas.height).data
-    .some(channel => channel !== 0);
+  return !canvas
+    .getContext('2d')
+    .getImageData(0, 0, canvas.width, canvas.height)
+    .data.some(channel => channel !== 0)
 }
